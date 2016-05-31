@@ -8,5 +8,8 @@ setup(name="pydnd",
     version=0.1,
     author="Nicholas Hunt-Walker",
     author_email="nhuntwalker@gmail.com",
-    extras_require=extras
+    extras_require=extras,
+    package_dir={'': "src"},
+    license="MIT",
+    py_modules=["main"]
 )
