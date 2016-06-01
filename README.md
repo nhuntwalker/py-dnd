@@ -6,3 +6,7 @@
 
 A Python module for character creation and simple gameplay of the 5th
 edition of Dungeons and Dragons.
+
+## Character
+
+The character object

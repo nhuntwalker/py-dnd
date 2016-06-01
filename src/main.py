@@ -45,7 +45,7 @@ class Character(object):
     speed = 0
     max_hp = 0
     current_hp = 0
-    tmp_hp = 0    
+    tmp_hp = 0
 
     carry_weight = 0
     carry_capacity = 0
@@ -85,10 +85,15 @@ class Character(object):
         self.set_carry_capacity()
 
     def get_ability_modifier(self, stat):
+        """This method gets the ability modifier number for a given ability.
+        Given an ability score, the ability modifier is that (score - 10) / 2,
+        rounded down."""
         mod = getattr(self, stat)
         return (mod - 10) // 2
 
     def change_stat(self, stat, points=1):
+        """This method changes the value of a given statistic, either 
+        increasing it or decreasing it by the amount specified."""
         current = getattr(self, stat)
         if current + points < 0:
             output = "You can't decrease {} below 0\n({} - {} = {})."
@@ -104,14 +109,22 @@ class Character(object):
                 self.char_name, current, new))
 
     def add_money(self, piece_type, amt):
+        """This method adds money of one type to the character's overall
+        stash of money.
+
+        TODO: Allow for the addition of multiple types of coins."""
         self.money[piece_type] += amt
 
     def spend_money(self, piece_type, amt):
+        """This method removes money from the character's overall stash
+        by the amount specified. If the character doesn't have enough of
+        the specified type, no change is committed."""
         if self.money[piece_type] - amt < 0:
             return "You don't have enough money for this."
         self.money[piece_type] -= amt
 
     def show_money(self):
+        """A simple display of all of the money this character has."""
         output = "===================\n"
         output += "Your current money:\n|"
         for key, val in self.money.items():
@@ -120,6 +133,8 @@ class Character(object):
         return output
 
     def exchange_money(self, exchange_this, amt, for_this):
+        """This method exchanges a specified amount of one type of
+        money for the equivalent amount of the other."""
         the_rate = EXCHANGE_RATES[exchange_this][for_this]
         if (amt * the_rate < 1) or (self.money[exchange_this] - amt < 0):
             output = "You don't have enough {} for this exchange."
@@ -132,6 +147,9 @@ class Character(object):
         self.money[for_this] += new_amt
 
     def gain_experience(self, new_xp):
+        """This method will add experience to this character, increasing
+        the character's level if the character's total experience is above
+        the next threshold."""
         self.experience += new_xp
         ii = 0
         if self.experience >= 300:
@@ -148,26 +166,44 @@ class Character(object):
             self.proficiency = sum(PROFICIENCY_ARR)
 
     def show_health(self):
+        """A simple method for displaying the current and maximum HP for
+        this character."""
         output = "===================\n"
         output += "Current HP: {}/{}".format(self.current_hp, self.max_hp)
         output += "\n==================="
         return output
 
     def take_damage(self, amt):
+        """This method adds damage to the character, subtracting the 
+        appropriate amount of health. If the character's health reaches
+        zero, their health will not go below that amount and they will
+        be notified that they have died.
+
+        TODO: Change the print message to a status change."""
         self.current_hp -= amt
         if self.current_hp < 0:
             self.current_hp = 0
+            print("You have died.")
         self.show_health()
 
     def heal_damage(self, amt):
+        """This method removes damage from the character, adding the 
+        approrpiate amount of health. If the character's health reaches
+        their maximum, their health will not increase above that max."""
         self.current_hp += amt
         if self.current_hp > self.max_hp:
             self.current_hp = self.max_hp
+            print("You are fully healed.")
         self.show_health()
 
     def roll_random_stats(self):
+        """A method for rolling stats at random. To be used only on 
+        character initialization."""
         stats = [sum(sorted(roll_dice(6, 4)[1:])) for jj in range(6)]
         self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma = stats
 
     def set_carry_capacity(self):
+        """A method for setting this character's carry capacity. This 
+        method is to be called either during initialization or upon a change
+        in the character's strength."""
         self.carry_capacity = 15 * self.strength

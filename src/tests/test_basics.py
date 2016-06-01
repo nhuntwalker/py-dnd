@@ -219,7 +219,7 @@ def test_roll_random_stats(this_stat):
 
 def test_display_health():
     bob = char_setup()
-    assert bob.current_hp == bob.max_hp
+    assert bob.current_hp == bob.max_hp‰
     out = bob.show_health()
     assert "Current HP: {}/{}".format(bob.current_hp, bob.max_hp) in out
 
@@ -248,3 +248,8 @@ def test_heal_more_than_max():
 def test_carry_capacity():
     bob = char_setup()
     assert bob.carry_capacity == bob.strength * 15
+
+def test_carry_capacity_changes_on_strength_change():
+    """TODO: write a test where the strength changes and on that change
+    the carry capacity changes."""
+    assert False
