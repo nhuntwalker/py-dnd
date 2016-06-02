@@ -9,4 +9,4 @@ edition of Dungeons and Dragons.
 
 ## Character
 
-The character object
+The character object is the base class that all other classes/races will inherit from. It contains functionality for setting initial character stats and attributes, gaining experience (and leveling up), gaining/losing money, and calculates ability modifiers amongst other things.
